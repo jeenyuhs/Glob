@@ -11,7 +11,7 @@ NOT_ALLOWED = [
     "import os"
 ]
 
-if not os._exists("temp"):
+if not os.path.exists("temp"):
     os.mkdir("temp")
 
 def time_took(st: float):
