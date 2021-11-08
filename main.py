@@ -43,20 +43,27 @@ async def handle(message: discord.Message) -> None:
 
     with open((file := f"temp/{message.id}.v"), "w+") as f:
         for m in msg:
-            if m.startswith("```v"):
+            if m == "```v":
                 is_v = True
+                continue
+        
+            if not is_v:
                 continue
 
             if m in NOT_ALLOWED:
                 await message.reply("Something in your code isn't allowed. Most likely a blacklisted import.")
                 return
+            
+            if m == "```":
+                break
 
             f.write(m + "\n")
 
     if not is_v:
+        os.remove(file)
         return
 
-    cmd = f"v -gc boehm run {file}"
+    cmd = f"v run {file}"
 
     st = time.time()
 
@@ -83,7 +90,7 @@ async def handle(message: discord.Message) -> None:
         if config["log"]:
             print(f"{message.author.name} executed a {len(msg) - 2} line code, that \u001b[31mfailed\u001b[0m")
 
-        await message.reply(embed=stdembed(title="Failed", time=st, resp=resp.replace("`", "\`"), color=0xf50000))
+        await message.reply(embed=stdembed(title="Failed", time=st, resp=resp, color=0xf50000))
         return
 
     if not stdout:
