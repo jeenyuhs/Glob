@@ -18,6 +18,9 @@ def time_took(st: float):
     return round(time.time() - st, 2)
 
 def stdembed(title: str, time: float, resp: str, color: int):
+    if len(resp) >= 1024:
+        resp = "Response too long. Truncated."
+
     embed=discord.Embed(title=title, description=f"Took {time_took(time)} seconds to complete.", color=color)
     embed.add_field(name="Response", value=f"```\n{resp}```", inline=True)
     return embed
