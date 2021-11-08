@@ -83,7 +83,7 @@ async def handle(message: discord.Message) -> None:
         if config["log"]:
             print(f"{message.author.name} executed a {len(msg) - 2} line code, that \u001b[31mfailed\u001b[0m")
 
-        await message.reply(embed=stdembed(title="Failed", time=st, resp=resp, color=0xf50000))
+        await message.reply(embed=stdembed(title="Failed", time=st, resp=resp.replace("`", "\`"), color=0xf50000))
         return
 
     if not stdout:
