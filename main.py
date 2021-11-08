@@ -14,10 +14,10 @@ NOT_ALLOWED = [
 if not os.path.exists("temp"):
     os.mkdir("temp")
 
-def time_took(st: float):
+def time_took(st: float) -> float:
     return round(time.time() - st, 2)
 
-def stdembed(title: str, time: float, resp: str, color: int):
+def stdembed(title: str, time: float, resp: str, color: int) -> discord.Embed:
     if len(resp) >= 1024:
         resp = "Response too long. Truncated."
 
@@ -26,25 +26,25 @@ def stdembed(title: str, time: float, resp: str, color: int):
     return embed
 
 @client.event
-async def on_ready():
+async def on_ready()  -> None:
     print(f"Logged in as {client.user.name} ({client.user.id})")
 
 @client.event
-async def on_message(message: discord.Message):
+async def on_message(message: discord.Message)  -> None:
     if message.author.bot:
-        return
-
-    if not message.content.startswith("```"):
         return
 
     asyncio.create_task(handle(message))
 
-async def handle(message: discord.Message):
+async def handle(message: discord.Message) -> None:
     msg = message.content.split("\n")
+
+    is_v = False
 
     with open((file := f"temp/{message.id}.v"), "w+") as f:
         for m in msg:
-            if m.startswith("```"):
+            if m.startswith("```v"):
+                is_v = True
                 continue
 
             if m in NOT_ALLOWED:
@@ -52,6 +52,9 @@ async def handle(message: discord.Message):
                 return
 
             f.write(m + "\n")
+
+    if not is_v:
+        return
 
     cmd = f"v -gc boehm run {file}"
 
