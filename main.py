@@ -3,7 +3,7 @@ import os
 import time
 import discord  # type: ignore
 from config import config
-
+import re
 
 client = discord.Client()
 
@@ -83,7 +83,7 @@ async def handle(message: discord.Message) -> None:
 
     if stderr or timed_out:
         if stderr:
-            resp = "".join(stderr.decode("utf-8").split(": ", 1)[1:])
+            resp = re.sub(r"temp\/\d*.v:\d*:\d*:\s", "", stderr.decode("utf-8"))
         else:
             resp = "Timed out."
 
