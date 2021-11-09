@@ -96,7 +96,11 @@ async def handle(message: discord.Message) -> None:
     if not stdout:
         resp = "No output"
     else:
-        resp = stdout.decode("utf-8")
+        try:
+            resp = stdout.decode("utf-8")
+        except:
+            await message.reply(embed=stdembed(title="Failed", time=st, resp="Unknown error.", color=0xf50000))
+            return
 
     if config["log"]:
         print(f"{message.author.name} executed a {len(msg) - 2} line code, that was \u001b[32msuccessful\u001b[0m and took {time_took(st)} seconds")
